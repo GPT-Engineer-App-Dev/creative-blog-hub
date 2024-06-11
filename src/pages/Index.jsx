@@ -1,7 +1,15 @@
-import { Box, Container, Heading, Text, VStack, HStack, IconButton } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Container, Heading, Text, VStack, HStack, IconButton, Button } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Index = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    setPosts(storedPosts);
+  }, []);
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
@@ -11,20 +19,17 @@ const Index = () => {
         </Box>
 
         <Box p={6} boxShadow="md" borderRadius="md" bg="white">
-          <Heading as="h2" size="lg" mb={4}>Latest Posts</Heading>
+          <HStack justifyContent="space-between" mb={4}>
+            <Heading as="h2" size="lg">Latest Posts</Heading>
+            <Button as={RouterLink} to="/add-post" colorScheme="teal">Add New Post</Button>
+          </HStack>
           <VStack spacing={4} align="stretch">
-            <Box p={4} borderWidth={1} borderRadius="md">
-              <Heading as="h3" size="md">Post Title 1</Heading>
-              <Text mt={2}>This is a short summary of the first blog post.</Text>
-            </Box>
-            <Box p={4} borderWidth={1} borderRadius="md">
-              <Heading as="h3" size="md">Post Title 2</Heading>
-              <Text mt={2}>This is a short summary of the second blog post.</Text>
-            </Box>
-            <Box p={4} borderWidth={1} borderRadius="md">
-              <Heading as="h3" size="md">Post Title 3</Heading>
-              <Text mt={2}>This is a short summary of the third blog post.</Text>
-            </Box>
+            {posts.map((post, index) => (
+              <Box key={index} p={4} borderWidth={1} borderRadius="md">
+                <Heading as="h3" size="md">{post.title}</Heading>
+                <Text mt={2}>{post.content}</Text>
+              </Box>
+            ))}
           </VStack>
         </Box>
 
